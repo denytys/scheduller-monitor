@@ -6,6 +6,7 @@ import {
   ClockCircleOutlined,
 } from "@ant-design/icons";
 import { motion, AnimatePresence } from "framer-motion";
+import { Sun, Moon } from "lucide-react";
 
 export default function Header({
   onRefresh,
@@ -117,15 +118,23 @@ export default function Header({
 
               {/* 🌙 switch dark mode */}
               <div
-                className={`px-2 py-1 rounded-lg shadow transition-colors duration-300 ${
+                className={`px-1 pt-0 pb-1 rounded-full shadow transition-colors duration-300 ${
                   darkMode ? "bg-gray-700" : "bg-white"
                 }`}
               >
                 <Switch
                   checked={darkMode}
                   onChange={setDarkMode}
-                  checkedChildren="🌙"
-                  unCheckedChildren="☀️"
+                  checkedChildren={
+                    <div className="flex items-center justify-center">
+                      <Moon size={14} className="text-white mt-1" />
+                    </div>
+                  }
+                  unCheckedChildren={
+                    <div className="flex items-center justify-center">
+                      <Sun size={14} className="text-white mt-1" />
+                    </div>
+                  }
                 />
               </div>
             </motion.div>

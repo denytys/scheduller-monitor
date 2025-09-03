@@ -13,12 +13,11 @@ export default function Dashboard() {
   const [lastRefresh, setLastRefresh] = useState(null);
   const intervalRef = useRef(null);
 
+  // 🌙 dark mode state
+  const [darkMode, setDarkMode] = useState(false);
+
   const fetchData = async () => {
     setLoading(true);
-
-    const start = Date.now();
-    const minDuration = 1000;
-
     try {
       const res = await axios.get(
         `${import.meta.env.VITE_MONITOR_BE}/dashboard/stats`
@@ -28,16 +27,7 @@ export default function Dashboard() {
     } catch (err) {
       console.error("Fetch error:", err);
     } finally {
-      const elapsed = Date.now() - start;
-      const remaining = minDuration - elapsed;
-
-      if (remaining > 0) {
-        setTimeout(() => {
-          setLoading(false);
-        }, remaining);
-      } else {
-        setLoading(false);
-      }
+      setTimeout(() => setLoading(false), 1000);
     }
   };
 
@@ -55,7 +45,11 @@ export default function Dashboard() {
   }, [autoRefresh, intervalTime]);
 
   return (
-    <div className="w-full min-h-screen bg-gray-100">
+    <div
+      className={`w-full min-h-screen transition-colors duration-300 ${
+        darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"
+      }`}
+    >
       <Header
         onRefresh={fetchData}
         autoRefresh={autoRefresh}
@@ -63,10 +57,11 @@ export default function Dashboard() {
         intervalTime={intervalTime}
         setIntervalTime={setIntervalTime}
         lastRefresh={lastRefresh}
+        darkMode={darkMode} // 🔥 kirim ke Header
+        setDarkMode={setDarkMode} // 🔥 kirim ke Header
       />
-      <Total stats={stats} />
-      <TimelineSection />
-
+      <Total stats={stats} darkMode={darkMode} /> {/* 🔥 kirim darkMode */}
+      <TimelineSection darkMode={darkMode} /> {/* 🔥 kirim darkMode */}
       <Modal open={loading} footer={null} closable={false} centered>
         <div className="text-center p-4">
           <Spin size="large" />

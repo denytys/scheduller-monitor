@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Inbox, Send, Download, Upload, ShieldCheck } from "lucide-react";
 import axios from "axios";
 
-export default function Total() {
+export default function Total({ darkMode }) {
   const [statsData, setStatsData] = useState({});
 
   // Fetch total stats
@@ -47,7 +47,11 @@ export default function Total() {
   ];
 
   return (
-    <div className="bg-white p-4 rounded-3xl shadow-md mb-4 mx-8">
+    <div
+      className={`p-4 rounded-3xl shadow-md mb-4 mx-8 transition-colors duration-300 ${
+        darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
+      }`}
+    >
       <h2 className="font-semibold mb-2">
         Total Data {statsData.year ? statsData.year : "Hari Ini"}
       </h2>
@@ -55,13 +59,21 @@ export default function Total() {
         {stats.map((stat) => (
           <div
             key={stat.title}
-            className="flex items-center gap-4 bg-gray-50 p-4 rounded-xl w-full"
+            className={`flex items-center gap-4 p-4 rounded-xl w-full transition-colors duration-300 ${
+              darkMode ? "bg-gray-700" : "bg-gray-50"
+            }`}
           >
             <div className={`${stat.color} text-white p-3 rounded-full`}>
               {stat.icon}
             </div>
             <div className="flex flex-col">
-              <span className="text-gray-600 text-sm">{stat.title}</span>
+              <span
+                className={`text-sm ${
+                  darkMode ? "text-gray-300" : "text-gray-600"
+                }`}
+              >
+                {stat.title}
+              </span>
               <span className="text-xl font-bold">{stat.value}</span>
             </div>
           </div>

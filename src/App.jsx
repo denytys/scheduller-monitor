@@ -4,7 +4,7 @@ import Dashboard from "./Dashboard";
 
 export default function App() {
   return (
-    <Router>
+    <Router basename="/monitor/">
       <div className="min-h-screen bg-gray-100">
         <Routes>
           <Route path="/" element={<Dashboard />} />

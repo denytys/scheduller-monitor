@@ -28,7 +28,7 @@ export default function Total({ darkMode }) {
     },
     {
       title: "Ecert Out",
-      value: statsData.ecert_out || 0,
+      value: statsData.eah_out || 0,
       icon: <Send size={20} />,
       color: "bg-green-500",
     },

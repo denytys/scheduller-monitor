@@ -7,6 +7,7 @@ import {
   ShieldCheck,
   Server,
 } from "lucide-react";
+import dayjs from "dayjs";
 
 export default function TimelineSection({ timeline, darkMode }) {
   if (!timeline) {
@@ -105,12 +106,25 @@ function TimelineCard({ item, fullHeight, darkMode }) {
     return `${year}-${month}-${day}`;
   };
 
+  // nek tanggal data mlebu terakhir ora pada karo data nomer 2 ning ngingsore kedipkedip abang
+  // let status = 0;
+  // if (item.logs.length > 1) {
+  //   const lastDate = extractDate(item.logs[0]);
+  //   const prevDate = extractDate(item.logs[1]);
+  //   if (lastDate && prevDate && lastDate !== prevDate) {
+  //     status = 1;
+  //   }
+  // }
+
+  // data mlebu terakhir luwih sing 24 jam kedipkedip abang
   let status = 0;
-  if (item.logs.length > 1) {
+  if (item.logs.length > 0) {
     const lastDate = extractDate(item.logs[0]);
-    const prevDate = extractDate(item.logs[1]);
-    if (lastDate && prevDate && lastDate !== prevDate) {
-      status = 1;
+    if (lastDate) {
+      const diffHours = dayjs().diff(dayjs(lastDate), "hour");
+      if (diffHours >= 24) {
+        status = 1;
+      }
     }
   }
 
@@ -150,9 +164,11 @@ function TimelineCard({ item, fullHeight, darkMode }) {
               <div key={i} className="flex items-start gap-2">
                 <span
                   className={`w-2 h-2 mt-1 rounded-full ${
-                    i === 0 ? "bg-green-500 animate-ping" : "bg-gray-500"
+                    log.status === "SUCCESS"
+                      ? "bg-green-500 animate-ping"
+                      : "bg-red-500 animate-ping"
                   }`}
-                ></span>
+                />
                 <p className="text-xs">
                   <span
                     className={`font-medium ${
@@ -163,6 +179,7 @@ function TimelineCard({ item, fullHeight, darkMode }) {
                   >
                     {log.status}
                   </span>{" "}
+                  <span className="font-medium">{log.host}</span> -{" "}
                   <span
                     className={darkMode ? "text-gray-300" : "text-gray-500"}
                   >

@@ -1,46 +1,37 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Inbox, Send, Download, Upload, ShieldCheck } from "lucide-react";
-import axios from "axios";
 
-export default function Total({ darkMode }) {
-  const [statsData, setStatsData] = useState({});
+export default function Total({ stats, darkMode }) {
+  if (!stats) return null;
 
-  // Fetch total stats
-  useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_MONITOR_BE}/dashboard/stats`)
-      .then((res) => setStatsData(res.data))
-      .catch((err) => console.error("Error fetching stats:", err));
-  }, []);
-
-  const stats = [
+  const statsList = [
     {
       title: "Ecert In",
-      value: statsData.ecert_in || 0,
+      value: stats.ecert_in || 0,
       icon: <Inbox size={20} />,
       color: "bg-purple-500",
     },
     {
       title: "Ephyto In",
-      value: statsData.ephyto_in || 0,
+      value: stats.ephyto_in || 0,
       icon: <Download size={20} />,
       color: "bg-yellow-500",
     },
     {
       title: "Ecert Out",
-      value: statsData.eah_out || 0,
+      value: stats.eah_out || 0,
       icon: <Send size={20} />,
       color: "bg-green-500",
     },
     {
       title: "Ephyto Out",
-      value: statsData.ephyto_out || 0,
+      value: stats.ephyto_out || 0,
       icon: <Upload size={20} />,
       color: "bg-blue-500",
     },
     {
       title: "PassQ",
-      value: statsData.passq || 0,
+      value: stats.passq || 0,
       icon: <ShieldCheck size={20} />,
       color: "bg-yellow-500",
     },
@@ -53,10 +44,10 @@ export default function Total({ darkMode }) {
       }`}
     >
       <h2 className="font-semibold mb-2">
-        Total Data {statsData.year ? statsData.year : "Hari Ini"}
+        Total Data {stats.year ? stats.year : "Hari Ini"}
       </h2>
       <div className="flex flex-col md:flex-row gap-4">
-        {stats.map((stat) => (
+        {statsList.map((stat) => (
           <div
             key={stat.title}
             className={`flex items-center gap-4 p-4 rounded-xl w-full transition-colors duration-300 ${

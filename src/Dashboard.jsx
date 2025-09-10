@@ -7,6 +7,7 @@ import { Modal, Spin } from "antd";
 
 export default function Dashboard() {
   const [stats, setStats] = useState(null);
+  const [timeline, setTimeline] = useState(null);
   const [loading, setLoading] = useState(false);
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [intervalTime, setIntervalTime] = useState(900000);
@@ -19,15 +20,17 @@ export default function Dashboard() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_MONITOR_BE}/dashboard/stats`
-      );
-      setStats(res.data);
+      const [statsRes, timelineRes] = await Promise.all([
+        axios.get(`${import.meta.env.VITE_MONITOR_BE}/dashboard/stats`),
+        axios.get(`${import.meta.env.VITE_MONITOR_BE}/timeline`),
+      ]);
+      setStats(statsRes.data);
+      setTimeline(timelineRes.data);
       setLastRefresh(new Date());
     } catch (err) {
       console.error("Fetch error:", err);
     } finally {
-      setTimeout(() => setLoading(false), 1000);
+      setTimeout(() => setLoading(false), 500);
     }
   };
 
@@ -57,11 +60,14 @@ export default function Dashboard() {
         intervalTime={intervalTime}
         setIntervalTime={setIntervalTime}
         lastRefresh={lastRefresh}
-        darkMode={darkMode} // 🔥 kirim ke Header
-        setDarkMode={setDarkMode} // 🔥 kirim ke Header
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
       />
-      <Total stats={stats} darkMode={darkMode} /> {/* 🔥 kirim darkMode */}
-      <TimelineSection darkMode={darkMode} /> {/* 🔥 kirim darkMode */}
+
+      {/* Total & Timeline sekarang dapet data dari Dashboard */}
+      <Total stats={stats} darkMode={darkMode} />
+      <TimelineSection timeline={timeline} darkMode={darkMode} />
+
       <Modal open={loading} footer={null} closable={false} centered>
         <div className="text-center p-4">
           <Spin size="large" />

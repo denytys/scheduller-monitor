@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 import {
   Inbox,
   Send,
@@ -9,24 +8,7 @@ import {
   Server,
 } from "lucide-react";
 
-export default function TimelineSection({ darkMode }) {
-  const [timeline, setTimeline] = useState(null);
-
-  useEffect(() => {
-    const fetchTimeline = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_MONITOR_BE}/timeline`
-        );
-        setTimeline(res.data);
-      } catch (err) {
-        console.error("Gagal ambil timeline:", err);
-      }
-    };
-
-    fetchTimeline();
-  }, []);
-
+export default function TimelineSection({ timeline, darkMode }) {
   if (!timeline) {
     return <p className="text-center py-4">Loading timeline...</p>;
   }
